@@ -92,12 +92,15 @@ public class SpellChecker {
 			BufferedReader reader = new BufferedReader(new FileReader(new File("src/org/meltwater/amanze/spellchecker/"+document)));
 		    String rawLine;
 		    while ((rawLine = reader.readLine()) != null) {
-				String[] words = rawLine.toLowerCase().split(" ");
+				String[] words = rawLine.split(" ");
 				for (String word : words) {
+					boolean isCapitalized = !(word.equals(word.toLowerCase()));
+					word = word.toLowerCase();
 					if (dictionary.contains(word) || word.matches(".*[.,()]")) {
-						bw.write(word+" ");
+						bw.write((isCapitalized ? capitalize(word) : word)+" ");
 					}else{
-						bw.write(correct(word)+ "??? ");
+						String out = correct(word);
+						bw.write((isCapitalized ? capitalize(out) : out)+ " ");
 					}
 				}
 				bw.newLine();
@@ -109,6 +112,10 @@ public class SpellChecker {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private static String capitalize(final String line) {
+	   return Character.toUpperCase(line.charAt(0)) + line.substring(1);
 	}
 	
 	/*
